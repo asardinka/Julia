@@ -154,8 +154,9 @@ end
 function test()
     for n in 100:500:10100
         println("Матрица порядка ",n,"×",n,":")
-        @time reverse_gauss(randn(n,n),randn(n))
-        @time reverse_gauss_columns(randn(n,n),randn(n))
+        A = randn(n,n);B = randn(n)
+        @time reverse_gauss(A,B)
+        @time reverse_gauss_columns(A,B)
     end
 end
 
