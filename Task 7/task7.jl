@@ -20,11 +20,14 @@ end
 Base.get(p::RepitPlacement) = p.value
 next!(p::RepitPlacement{N,K}) where {N, K} = next_repit_placement!(p.value, N)
     
-#=
-for a in RepitPlacement{2,3}()
-    println(a)
+
+rp = RepitPlacement{2,3}()
+function Base. println(R::RepitPlacement{N,K}) where {N,K}
+    for a in R
+        println(a)
+    end
 end
-=#
+
 
 # Перестановки
 struct Permute{N} <: AbstractCombinObject
@@ -35,11 +38,13 @@ end
 
 Base.get(obj::Permute) = obj.value
 next!(permute::Permute) = next_permute!(permute.value)
-#=
-for p in Permute{4}()
-    println(p)
+
+permute = Permute{3}()
+function Base. println(R::Permute{N}) where {N}
+    for a in R
+        println(a)
+    end
 end
-=#
 
 #  Все подмножества N-элементного множества
 struct Subsets{N} <: AbstractCombinObject
@@ -49,11 +54,14 @@ end
 Base.get(sub::Subsets) = sub.indicator
 next!(sub::Subsets) = next_indicator!(sub.indicator)
 
-#=
-for sub in Subsets{2}()
-    println(sub)
+
+
+subsets = Subsets{3}()
+function Base. println(R::Subsets{N}) where {N}
+    for a in R
+        println(a)
+    end
 end
-=#
 
 # k-элементные подмножества n-элементного множества
 
@@ -65,14 +73,20 @@ Base.get(sub::KSubsets) = sub.indicator
 next!(sub::KSubsets{M, K}) where{M, K} = next_indicator!(sub.indicator)
 
 #=
-for sub in KSubsets{1:3, 3}()
+for sub in KSubsets{1:4, 3}()
     sub |> println
 end
-=#   
+=#
+ksub = KSubsets{1:4, 3}
+function Base. println(R::KSubsets{M, K}) where {M,K}
+    for sub in R
+        sub |> println
+    end
+end
 
 
 # Разбиения
-#=
+
 struct NSplit{N} <: AbstractCombinObject
     value::Vector{Int64}
     num_terms::Int # число слагаемых (это число мы обозначали - k)
@@ -82,17 +96,15 @@ end
 Base.get(nsplit::NSplit) = nsplit.value[begin:nsplit.num_terms]
 
 function next!(nsplit::NSplit)
-    #nsplit.value, nsplit.num_terms = 
-    next_split!(nsplit.value, nsplit.num_terms)
-    #get(nsplit)
+    nsplit.value, nsplit.num_terms = next_split!(nsplit.value, nsplit.num_terms)
+    get(nsplit)
 end
-
-n = 5
+#=
+n = 6
 for s in NSplit{n}()
     println(s)
 end
 =#
-
 #Алгоритмы обхода графа "поиск в глубину" и "поиск в ширину"
 
 
@@ -122,4 +134,25 @@ graph = Dict(
     7 => [3]
 )
 
-dfs(graph, 1)
+#dfs(graph, 1)
+
+
+function bfs(graph::Dict{I, Vector{I}}, vstart::I) where I <: Integer
+    queue = [vstart]
+    mark = zeros(Bool, length(graph)) 
+    mark[vstart] = true
+    while !isempty(queue)
+        v = popfirst!(queue)
+        println("Visited: $v")
+        for u in graph[v]
+            if !mark[u]
+                mark[u] = true
+                push!(queue, u)
+            end
+        end
+    end
+end
+
+
+# Запуск BFS
+#bfs(graph, 1)

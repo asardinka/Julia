@@ -133,14 +133,14 @@ value(p::Polynomial,x) = valder(p,x)[1]
 der(p::Polynomial,x) = valder(p,x)[2]
 
 derivative(p::Polynomial) = begin
-    n = [zero(T) for x in 1:(length(p.c)-1)]
+    n = [zero(typeof(p.c[1])) for x in 1:(length(p.c)-1)]
     if (ord(p)) == 0
         return zero(p)
     end
     for i in 1:ord(p)
-        n[i] = (length(p.c)-i)*p.c[length(p.c)-i+1]
+        n[i] = p.c[length(p.c)-i]*p.c[length(p.c)-i+1]
     end
-    return Polynomial(n)
+    return P(n)
 end
 
 convert(p::Polynomial) = tuple(p.c...)
